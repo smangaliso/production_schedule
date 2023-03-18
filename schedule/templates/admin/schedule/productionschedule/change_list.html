@@ -7,7 +7,7 @@
 <script></script>
 {% endblock %} {% block content %}
 <!-- Render our chart -->
-
+{% if chart_data %}
 <div style="width: 80%">
   <div style="margin-bottom: 30px; width: 60%; height: 50%" id="myChart"></div>
 </div>
@@ -101,5 +101,6 @@
 
   Plotly.newPlot("myChart", plotData, layout);
 </script>
+{%endif%}
 <!-- Render the rest of the ChangeList view -->
 {{ block.super }} {% endblock %}
