@@ -1,0 +1,4 @@
+machine_name,machine_serial_number,event_name,event_code,start_time,end_time
+Machine 1,SN001,Event 1,EC001,2022-04-01 08:03:23,2022-04-01 12:03:01
+Machine 2,SN002,Event 2,EC002,2022-04-01 12:10:10,2022-04-01 13:04:40
+Machine 3,SN003,Event 3,EC003,2022-04-04 14:07:30,2022-04-01 15:50:30

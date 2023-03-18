@@ -1,0 +1,105 @@
+{% extends "admin/change_list.html" %} {% load static %}
+
+<!-- Override extrahead to add Chart.js -->
+{% block extrahead %} {{ block.super }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-2.18.2.min.js"></script>
+<script></script>
+{% endblock %} {% block content %}
+<!-- Render our chart -->
+
+<div style="width: 80%">
+  <div style="margin-bottom: 30px; width: 60%; height: 50%" id="myChart"></div>
+</div>
+
+<script>
+  // Get the data
+  var data = {{ chart_data | safe }};
+
+  var minDate = new Date(
+    Math.min.apply(
+      null,
+      data.map(function (event) {
+        return moment(event.start, "YYYY-MM-DD HH:mm:ss").toDate();
+      })
+    )
+  );
+
+  var maxDate = new Date(
+    Math.max.apply(
+      null,
+      data.map(function (event) {
+        return moment(event.end, "YYYY-MM-DD HH:mm:ss").toDate();
+      })
+    )
+  );
+  var machineNames = data.map(function (d) {
+    return d.label;
+  });
+  var uniqueMachineNames = [...new Set(machineNames)];
+
+  var trace1 = {
+    x: data.map(function (d) {
+      return moment(d.start, "YYYY-MM-DD HH:mm:ss").toDate();
+    }),
+    y: data.map(function (d) {
+      return d.label;
+    }),
+    customdata: data.map(function (d) {
+      return {
+        start: d.start,
+        end: d.end,
+        label: d.label,
+      };
+    }),
+    type: "scatter",
+    mode: "markers",
+    marker: {
+      color: "blue",
+      size: 10,
+    },
+  };
+
+  var layout = {
+    title: "Production Schedule",
+    xaxis: {
+      title: "Time",
+      range: [minDate, maxDate],
+    },
+    yaxis: {
+      tickvals: uniqueMachineNames,
+    },
+    margin: {
+      l: 150, // left margin
+      r: 50, // right margin
+      b: 50, // bottom margin
+      t: 50, // top margin
+      pad: 4, // padding between the plot and the edge of the container
+    },
+    hovermode: "closest",
+    shapes: data.map(function (d) {
+      return {
+        type: "rect",
+        xref: "x",
+        yref: "y",
+        x0: moment(d.start, "YYYY-MM-DD HH:mm:ss").toDate(),
+        y0: d.label,
+        x1: moment(d.end, "YYYY-MM-DD HH:mm:ss").toDate(),
+        y1: d.label,
+        line: {
+          color: "blue",
+          width: 2,
+        },
+        fillcolor: "blue",
+        opacity: 0.5,
+        hoverinfo: "skip",
+      };
+    }),
+  };
+
+  var plotData = [trace1];
+
+  Plotly.newPlot("myChart", plotData, layout);
+</script>
+<!-- Render the rest of the ChangeList view -->
+{{ block.super }} {% endblock %}
