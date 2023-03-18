@@ -25,6 +25,7 @@ All the activities including the bonuses were completed.
 1. Log in to the admin interface: `http://localhost:8000/admin`
 2. Click on the "Production Schedules" link
 3. Click on a schedule to view the details
+4. please not the gantt chart will not be available when the Production Schedule is empty.
 
 <h3>Exporting the Production Schedule</h3>
 
